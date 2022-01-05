@@ -29,7 +29,7 @@ x_my_http_handler p_conn MG_EV_HTTP_MSG p_ev p_fn = do
                              mg_http_serve_dir p_conn hm p_opts 
 
 x_my_http_handler p_conn MG_EV_ACCEPT p_ev p_fn = do
-                    --putStrLn ("EV acceptp_fn  val: " ++ (show (get_p_int p_fn)))
+                    putStrLn ("EV acceptp_fn  val: " ++ (show (get_p_int p_fn)))
                     pure ()
                     
 x_my_http_handler p_conn MG_EV_WS_MSG p_ev p_fn = do
@@ -37,7 +37,9 @@ x_my_http_handler p_conn MG_EV_WS_MSG p_ev p_fn = do
                     --putStrLn ("EV WS  val: " ++ (show (get_p_int p_fn)))
                     let p_wm = (ev_to_ws_message p_ev)
                     msg <- mg_ws_receive_as_String p_conn p_wm                 
-                    mg_ws_send_text p_conn msg                    
+                    putStrLn ("Received: " ++ msg)
+                    mg_ws_send_text p_conn msg                  
+                      
 x_my_http_handler p_conn ev p_ev p_fn = do 
                   pure ()
 

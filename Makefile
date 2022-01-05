@@ -1,4 +1,4 @@
-all: mongoose libs
+all: mongoose libs ui
 
 IDRIS := idris2
 IDRIS_LIB_DIR := $(shell ${IDRIS} --libdir)
@@ -9,7 +9,10 @@ libs: wrap_libmongoose.c
 	cp libmongoose.so  ${LIBS}/libmongoose.so
 	rm libmongoose.so
 
-mongoose: mvect2.ipkg
+ui : ui.ipkg
+	idris2 --build ui.ipkg
+
+mongoose: mongoose.ipkg
 	idris2 --build mongoose.ipkg
 clean:
 	idris2 --clean mongoose.ipkg

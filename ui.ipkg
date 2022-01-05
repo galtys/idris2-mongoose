@@ -1,0 +1,26 @@
+package ui
+version = 0.5.0
+authors = "galtys"
+
+sourcedir = "src"
+
+depends = base >= 0.5.1
+        , contrib >= 0.5.1
+	, sop >= 0.5.0
+	, elab-util >= 0.5.0
+	, dom >= 0.1.0
+	, json >= 0.5.0
+	, rhone >= 0.0.1
+	, tailrec >= 0.1.0
+	, rhone-js >= 0.0.1
+opts       = "--codegen javascript"
+-- modules to install
+modules = Browser.WS2
+        , WebTestClient
+	  
+-- main file (i.e. file to load at REPL)
+main = WebTestClient
+
+-- name of executable
+executable = "ui.js"
+
