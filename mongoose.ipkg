@@ -1,0 +1,23 @@
+package mongoose
+version = 0.1.0
+authors = "galtys"
+-- maintainers =
+--license = GPL2
+
+sourcedir = "src"
+
+depends = base >= 0.5.1
+        , contrib   >= 0.5.1
+	, elab-util >= 0.5.0
+	, sop >= 0.5.0
+	, pretty-show >= 0.5.0
+	
+-- modules to install
+modules = Web.Mongoose.Types
+          ,Web.Mongoose.FFI
+          ,TestServer
+main = TestServer
+
+-- name of executable
+executable = ws_serve
+

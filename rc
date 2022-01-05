@@ -1,0 +1,10 @@
+homedir=$( getent passwd "$USER" | cut -d: -f6 )
+
+echo $homedir
+
+export PATH=$PATH:$homedir/.idris2/bin
+
+
+export IDRIS_LIB_DIR=$(idris2 --libdir)
+export LD_LIBRARY_PATH=$IDRIS_LIB_DIR/lib
+
