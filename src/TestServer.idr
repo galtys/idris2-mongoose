@@ -3,9 +3,7 @@ module TestServer
 
 import Web.Mongoose.Types
 import Web.Mongoose.FFI
-
 import Data.SortedMap
-
 
 json_result : String
 json_result = "{\"result\": 332}"
@@ -28,23 +26,19 @@ x_my_http_handler p_conn MG_EV_HTTP_MSG p_ev p_fn = do
 
 x_my_http_handler p_conn MG_EV_ACCEPT p_ev p_fn = do
                     putStrLn ("EV acceptp_fn  val: " ++ (show (get_p_int p_fn)))
-
                     pure ()
                     
 x_my_http_handler p_conn MG_EV_WS_MSG p_ev p_fn = do
-                    --l1 <- muf_3_bom
-                    --putStrLn ("EV WS  val: " ++ (show (get_p_int p_fn)))
                     let p_wm = (ev_to_ws_message p_ev)
                     msg <- mg_ws_receive_as_String p_conn p_wm                 
-                    putStrLn ("Sending Back: " ++ msg)
-                    mg_ws_send_text p_conn msg                  
+                    putStrLn ("Sending Back: (with MAGIC)" ++ msg)
+                    mg_ws_send_text p_conn (msg++" with MAGIC")
                       
 x_my_http_handler p_conn ev p_ev p_fn = do 
                   pure ()
 
 my_http_handler :  (Ptr MG_CONNECTION) -> Int -> (Ptr EV_DATA) -> (Ptr FN_DATA) -> PrimIO ()
 my_http_handler p_conn ev p_ev p_fn = toPrim ( x_my_http_handler p_conn (fromBits8 ev) p_ev p_fn)
-
 
 partial
 inf_loop : (Ptr MG_MGR) -> Int -> IO ()

@@ -1,36 +1,34 @@
 module WebTestClient
 
-import Data.IORef
+--import Data.IORef
 import Browser.WS2
-import Rhone.JS
+--import Rhone.JS
 %default total
 
-
-handle_open : String -> JSIO ()
-handle_open e = do
-  --consoleLog "Open             .................."
-  printLn "muf a ocas"
-  ws_send "Hello!"
-
+handle_open : WsSocket -> BrowserEvent -> IO ()
+handle_open ws e = do
+  console_log "on Open"
+  ws_send ws "Hello back"
   
-handle_message : WebSocketEvent -> JSIO ()
-handle_message e = do
-  consoleLog "Msg               fgdsfdgfd"
-  ws_i <- wsInfo e
-
-  consoleLog (msg ws_i)
+  
+handle_message : WsSocket -> BrowserEvent -> IO ()
+handle_message ws e = do
+  console_log "msg received"
+  msg <- get_data e
+  console_log ("msg: "++msg)
+  console_log ""  
+  ws_close ws
 
 test_main : HasIO io => io ()
 test_main = do
-   consoleLog "Start2"
-   ws_new "ws://localhost:8000/websocket"
-   ws_on_open handle_open 
-   ws_on_message handle_message
-
+   ws <- ws_new "ws://localhost:8000/websocket"
+   addEventListener "open" ws handle_open
+   addEventListener "message" ws handle_message   
+   pure ()
+   
 covering
 main : IO ()
 main = do
-   runJS test_main
-   
-   
+   console_log "start"
+   test_main   
    pure ()
