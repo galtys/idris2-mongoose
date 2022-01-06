@@ -108,9 +108,9 @@ prim__on_message : (WebSocketEvent -> IO () ) -> PrimIO ()
 %foreign "browser:lambda:(s)=> ws_State.new_ws(s)"
 prim__new_ws : (s:String) -> PrimIO ()
 
-%foreign "browser:lambda:(xs,msg) => ws_State.ws_send(msg)"
+%foreign "browser:lambda:(msg) => ws_State.ws_send(msg)"
 prim__send : String -> PrimIO ()
-%foreign "browser:lambda:(xs,msg) => ws_State.ws_close()"
+%foreign "browser:lambda:() => ws_State.ws_close()"
 prim__close : PrimIO ()
 
 export

@@ -8,7 +8,7 @@ import Rhone.JS
 
 handle_open : WebSocketEvent -> JSIO ()
 handle_open e = do
-  consoleLog "Open"
+  consoleLog "Open             .................."
   ws_send "Hello!"
   
 handle_message : WebSocketEvent -> JSIO ()
@@ -17,12 +17,15 @@ handle_message e = do
   consoleLog "Msg               fgdsfdgfd"
   consoleLog (msg ws_i)
 
-covering
-main : IO ()
-main = do
-   consoleLog "Start"
+test_main : HasIO io => io ()
+test_main = do
+   consoleLog "Start2"
    ws_new "ws://localhost:8000/websocket"
    ws_on_open handle_open 
    --ws_on_message handle_message
-   
+
+covering
+main : IO ()
+main = do
+   runJS test_main
    pure ()

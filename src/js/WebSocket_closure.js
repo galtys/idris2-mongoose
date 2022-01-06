@@ -1,3 +1,4 @@
+
 var ws_State = (function () {
     var state = {};
     //var ws = new WebSocket('ws://localhost:8000/websocket');
@@ -11,32 +12,55 @@ var ws_State = (function () {
             //let closed_state.ws = new WebSocket(s);
 	    ocas['ws'] = new WebSocket(s);
 	    console.log("new");
-	    ocas['ws'].addEventListener('message', event => function (event) {
-                 console.log('Message from server ', event.data);
-            } );
+	    
+            ocas['ws'].addEventListener('open', function (event) {
+		console.log('Message from server/open2 ')
+		console.log(event);
+            });
+            ocas['ws'].addEventListener('message', function (event) {
+		console.log('Message from server/message ');
+		console.log(event);		
+            });
+	    
 	},
+	
         ws_on_open : function ( h ) {
-	    console.log("register on open")	    
             ocas['ws'].addEventListener('open',h );
 	},
         ws_on_close : function ( h ) {
             ocas['ws'].addEventListener('close',h );
 	},
-
         ws_on_error : function ( h ) {
             ocas['ws'].addEventListener('error',h );
 	},
         ws_on_message : function ( h ) {
-	    console.log("register on message")	    
-            ocas['ws'].addEventListener('message',h );
-	},
-	
+            ocas['ws'].addEventListener('message',h );	    	    
+        },
+
         ws_send : function ( msg ) {
             ocas['ws'].send(msg);
-	    //return ws;
 	},
         ws_close : function () {
             ocas['ws'].close();
 	},	
     }
 } () );
+
+
+/*
+
+// Create WebSocket connection.
+const socket = new WebSocket('ws://localhost:8000/websocket');
+
+// Connection opened
+socket.addEventListener('open', function (event) {
+    socket.send('Hello Server!');
+});
+
+// Listen for messages
+socket.addEventListener('message', function (event) {
+    console.log('Message from server ', event.data);
+});
+
+
+*/
