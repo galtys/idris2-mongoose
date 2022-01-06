@@ -1,4 +1,4 @@
-all: mongoose libs ui
+all: mongoose libs ui ui_raw
 
 IDRIS := idris2
 IDRIS_LIB_DIR := $(shell ${IDRIS} --libdir)
@@ -11,6 +11,8 @@ libs: wrap_libmongoose.c
 
 ui : ui.ipkg
 	idris2 --build ui.ipkg
+ui_raw : ui_raw.ipkg
+	idris2 --build ui_raw.ipkg
 
 mongoose: mongoose.ipkg
 	idris2 --build mongoose.ipkg

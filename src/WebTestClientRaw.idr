@@ -1,9 +1,6 @@
 module WebTestClientRaw
 
---import Data.IORef
 import Browser.WS2
-import Browser.WebSocket
---import Rhone.JS
 %default total
 
 handle_open : WsSocket -> BrowserEvent -> IO ()
