@@ -13,8 +13,9 @@ handle_open e = do
   
 handle_message : WebSocketEvent -> JSIO ()
 handle_message e = do
-  ws_i <- wsInfo e
   consoleLog "Msg               fgdsfdgfd"
+  ws_i <- wsInfo e
+
   consoleLog (msg ws_i)
 
 test_main : HasIO io => io ()

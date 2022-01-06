@@ -11,14 +11,16 @@ var ws_State = (function () {
 	new_ws : function ( s) {
             //let closed_state.ws = new WebSocket(s);
 	    ocas['ws'] = new WebSocket(s);
-	    console.log("new");
-	    
             ocas['ws'].addEventListener('open', function (event) {
 		console.log('Message from server/open2 ')
 		console.log(event);
             });
             ocas['ws'].addEventListener('message', function (event) {
 		console.log('Message from server/message ');
+		console.log(event);		
+            });
+            ocas['ws'].addEventListener('close', function (event) {
+		console.log('Message from server/close ');
 		console.log(event);		
             });
 	    
@@ -44,6 +46,7 @@ var ws_State = (function () {
             ocas['ws'].close();
 	},	
     }
+    
 } () );
 
 
