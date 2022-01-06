@@ -16,11 +16,11 @@ depends = base >= 0.5.1
 opts       = "--codegen javascript"
 -- modules to install
 modules = Browser.WS2
-        , Browser.WebSocket
+        , WebTestClientRaw
         , WebTestClient	
 	  
 -- main file (i.e. file to load at REPL)
-main = WebTestClient
+main = WebTestClientRaw
 
 -- name of executable
 executable = "ui.js"

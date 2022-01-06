@@ -9,13 +9,6 @@ data BrowserEvent = MkEvent AnyPtr
 public export
 data WsSocket = MkWsSocket AnyPtr
 
---export data BrowserEvent: Type where [external]
-{-
-public export
-JSType BrowserEvent where
-  parents =  [ JS.Object.Object ]
-  mixins =  []
--}
 public export
 record WsMessageInfo where
   constructor MkWsMI
@@ -28,47 +21,6 @@ namespace BrowserEvent
   -- message
   export
   
-  {-
-  %foreign "browser:lambda:x=>x.data"
-  prim__data : BrowserEvent -> PrimIO String
-
-  export
-  %foreign "browser:lambda:x=>x.origin"
-  prim__origin : BrowserEvent -> PrimIO String
-    
-  export
-  %foreign "browser:lambda:x=>x.lastEventId"
-  prim__lastEventId : BrowserEvent -> PrimIO String
-  
-  export
-  %foreign "browser:lambda:x=>x.source"
-  prim__source : BrowserEvent -> PrimIO String
-  
-  export
-  %foreign "browser:lambda:x=>x.ports"
-  prim__ports : BrowserEvent -> PrimIO String
-
-  -- close
-  export
-  %foreign "browser:lambda:x=>x.code"
-  prim__code : BrowserEvent -> PrimIO String
-  
-  export
-  %foreign "browser:lambda:x=>x.reason"
-  prim__reason : BrowserEvent -> PrimIO String
-
-  export
-  %foreign "browser:lambda:x=>x.wasClean"
-  prim__wasClean : BrowserEvent -> PrimIO String
-  
-  
-  %foreign "browser:lambda:x=>x.data"
-  prim__data : BrowserEvent -> PrimIO String
-  
-  export
-  get_data : HasIO io => BrowserEvent -> io String
-  get_data e = primIO $ prim__data e
-  -}
   
   %foreign "browser:lambda:(f,x)=>x[f]"
   prim__get_field : String -> BrowserEvent -> PrimIO String
@@ -83,9 +35,13 @@ namespace BrowserEvent
   export
   get_origin : HasIO io =>BrowserEvent -> io String
   get_origin = get_field "origin"
+  export
+  get_source : HasIO io =>BrowserEvent -> io String
+  get_source = get_field "source"
    
 %foreign "browser:lambda: () => ws_State.get_socket()"
 prim__ws_socket : () -> PrimIO AnyPtr
+
 
 %foreign "browser:lambda: (event, callback, node) => node.addEventListener(event, x=>callback(x)())"
 prim__addEventListener : String -> (AnyPtr -> PrimIO ()) -> AnyPtr -> PrimIO ()
@@ -121,6 +77,8 @@ export
 addEventListener : HasIO io => String -> WsSocket -> (WsSocket -> BrowserEvent -> IO ()) -> io ()
 addEventListener event ws@(MkWsSocket n) callback =
   primIO $ prim__addEventListener event (\ptr => toPrim $ (callback ws) $ MkEvent ptr) n
+
+
 
 export
 ws_new : HasIO io => (s:String) -> io WsSocket
