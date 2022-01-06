@@ -14,9 +14,12 @@ handle_open ws e = do
 handle_message : WsSocket -> BrowserEvent -> IO ()
 handle_message ws e = do
   console_log "msg received"
+
   msg <- get_data e
-  console_log ("msg: "++msg)
-  console_log ""  
+  console_log ("msgda: "++msg)
+  o <- get_origin e
+  console_log ("origin: "++o)
+  
   ws_close ws
 
 test_main : HasIO io => io ()

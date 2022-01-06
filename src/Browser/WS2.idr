@@ -60,15 +60,30 @@ namespace BrowserEvent
   export
   %foreign "browser:lambda:x=>x.wasClean"
   prim__wasClean : BrowserEvent -> PrimIO String
-  -}
+  
+  
   %foreign "browser:lambda:x=>x.data"
   prim__data : BrowserEvent -> PrimIO String
   
   export
   get_data : HasIO io => BrowserEvent -> io String
   get_data e = primIO $ prim__data e
+  -}
   
-
+  %foreign "browser:lambda:(f,x)=>x[f]"
+  prim__get_field : String -> BrowserEvent -> PrimIO String
+  
+  export
+  get_field : HasIO io => String -> BrowserEvent -> io String
+  get_field f e= primIO $ prim__get_field f e
+  
+  export
+  get_data : HasIO io =>BrowserEvent -> io String
+  get_data = get_field "data"
+  export
+  get_origin : HasIO io =>BrowserEvent -> io String
+  get_origin = get_field "origin"
+   
 %foreign "browser:lambda: () => ws_State.get_socket()"
 prim__ws_socket : () -> PrimIO AnyPtr
 
