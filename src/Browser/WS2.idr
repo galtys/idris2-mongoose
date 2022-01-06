@@ -92,7 +92,7 @@ namespace WebSocketEvent
 --Prim Handlers
 
 %foreign "browser:lambda:(h) => ws_State.ws_on_open(h)"
-prim__on_open : (WebSocketEvent -> IO () ) -> PrimIO ()
+prim__on_open : (String -> IO () ) -> PrimIO ()
 
 %foreign "browser:lambda:(h) => ws_State.ws_on_close(h)"
 prim__on_close : (WebSocketEvent -> IO () ) -> PrimIO ()
@@ -108,9 +108,9 @@ prim__on_message : (WebSocketEvent -> IO () ) -> PrimIO ()
 %foreign "browser:lambda:(s)=> ws_State.new_ws(s)"
 prim__new_ws : (s:String) -> PrimIO ()
 
-%foreign "browser:lambda:(msg) => ws_State.ws_send(msg)"
+%foreign "browser:lambda:(msg) => ws_State.send(msg)"
 prim__send : String -> PrimIO ()
-%foreign "browser:lambda:() => ws_State.ws_close()"
+%foreign "browser:lambda:() => ws_State.close()"
 prim__close : PrimIO ()
 
 export
@@ -127,8 +127,9 @@ ws_new s =primIO $ prim__new_ws s
 -- Handlers
 
 export
-ws_on_open : HasIO io => (WebSocketEvent -> JSIO ()) -> io ()
+ws_on_open : HasIO io => (String -> JSIO ()) -> io ()
 ws_on_open run = primIO $ prim__on_open (\dt => runJS (run dt)   )
+
 
 export
 ws_on_close : HasIO io => (WebSocketEvent -> JSIO ()) -> io ()
