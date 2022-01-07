@@ -30,3 +30,7 @@ addEventListener' : HasIO io => String -> WsSocket   -> (WsSocket -> BrowserEven
 addEventListener' event ws@(MkWsSocket n) run =
      primIO $ prim__addEventListener' event (\dt => runJS (run ws $ MkEvent dt)   ) n
 
+export
+addEventListenerBE : HasIO io => String -> WsSocket   -> (BrowserEvent  -> JSIO ()) -> io ()
+addEventListenerBE event ws@(MkWsSocket n) run =
+     primIO $ prim__addEventListener' event (\dt => runJS (run $ MkEvent dt)   ) n
