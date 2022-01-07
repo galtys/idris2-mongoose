@@ -39,9 +39,6 @@ namespace BrowserEvent
   get_source : HasIO io =>BrowserEvent -> io String
   get_source = get_field "source"
    
-%foreign "browser:lambda: () => ws_State.get_socket()"
-prim__ws_socket : () -> PrimIO AnyPtr
-
 
 %foreign "browser:lambda: (event, callback, node) => node.addEventListener(event, x=>callback(x)())"
 prim__addEventListener : String -> (AnyPtr -> PrimIO ()) -> AnyPtr -> PrimIO ()
@@ -50,8 +47,8 @@ prim__addEventListener : String -> (AnyPtr -> PrimIO ()) -> AnyPtr -> PrimIO ()
 %foreign "browser:lambda:(s)=> console.log(s)"
 prim__console_log: String -> PrimIO () 
 
-%foreign "browser:lambda:(s)=> ws_State.new_ws(s)"
-prim__new_ws : (s:String) -> PrimIO ()
+%foreign "browser:lambda:(s)=> new WebSocket(s)"
+prim__new_ws : (s:String) -> PrimIO AnyPtr
 
 %foreign "browser:lambda:(ws,msg) => ws.send(msg)"
 prim__send : WsSocket -> String -> PrimIO ()
@@ -70,20 +67,46 @@ ws_close : HasIO io => WsSocket -> io ()
 ws_close ws = primIO $ (prim__close ws)
 
 
-ws_socket : HasIO io => io WsSocket
-ws_socket = map MkWsSocket $ primIO $ prim__ws_socket ()
-
 export
 addEventListener : HasIO io => String -> WsSocket -> (WsSocket -> BrowserEvent -> IO ()) -> io ()
 addEventListener event ws@(MkWsSocket n) callback =
   primIO $ prim__addEventListener event (\ptr => toPrim $ (callback ws) $ MkEvent ptr) n
 
-
-
 export
 ws_new : HasIO io => (s:String) -> io WsSocket
-ws_new s =do
-   primIO $ prim__new_ws s
-   ret <- ws_socket
-   pure ret
+ws_new s = map MkWsSocket $ primIO $ prim__new_ws s
    
+{-
+
+Message from server/open2 WebSocket_closure.js:17:11
+open { target: WebSocket, isTrusted: true, srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, … }
+WebSocket_closure.js:18:11
+ws_State.send('test send')
+undefined
+Message from server/message WebSocket_closure.js:21:11
+message { target: WebSocket, isTrusted: true, data: "test send", origin: "ws://localhost:8000", lastEventId: "", ports: Restricted, srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, … }
+WebSocket_closure.js:22:11
+ws_State.close()
+undefined
+Message from server/close WebSocket_closure.js:25:11
+close { target: WebSocket, isTrusted: true, wasClean: false, code: 1006, reason: "", srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, cancelable: false, … }
+WebSocket_closure.js:26:11
+
+var ws_State = (function () {
+    var state = {};
+    
+    return {
+	get_socket : function () {
+	    return state['ws'];
+	},
+	new_ws : function ( s) {
+	    state['ws'] = new WebSocket(s);
+	},
+	
+    }
+    
+} () );
+
+
+
+-}
